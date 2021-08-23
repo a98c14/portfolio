@@ -1,4 +1,4 @@
-import { Dictionary } from 'core/types/Dictionary';
+import { Dictionary } from 'lib/types/Dictionary';
 
 // Utility object to provide static types for string keys
 export const SKey = {

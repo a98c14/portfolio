@@ -32,7 +32,6 @@ export default function Home() {
 
     return (
         <HomeContainer>
-            <div className="font-extralight text-8xl text-blue-200 font-display">SELİM YEŞİLKAYA</div>
             <div className="flex flex-row gap-32">
                 {transitions((style, item) => (
                     <StyledLink text={item.text} href={item.href} style={style} key={item.href} />
