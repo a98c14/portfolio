@@ -2,6 +2,7 @@ import {
     findAvailableNumbersInBox,
     findAvailableNumbersInCol,
     findAvailableNumbersInRow,
+    solve,
 } from "lib/prototypes/sudoku-solver/sudokusolver";
 
 const sample = [
@@ -40,5 +41,9 @@ describe("SudokuSolver", () => {
     it("find box numbers correctly", () => {
         const nums = findAvailableNumbersInBox(sample, 0);
         expect(nums).toStrictEqual([2, 3, 4, 5, 7]);
+    });
+    it("test", () => {
+        const possibleNumbers = solve(sample);
+        console.table(possibleNumbers);
     });
 });

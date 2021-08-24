@@ -23,21 +23,40 @@ const solution = [
 ];
 
 export function solve(board: number[][]): number[][] {
-    // TODO(selim):
-    //  Check 3x3, Row, Col and findout possible numbers
-
-    for (let row = 0; row < board.length; row++) {
-        for (let col = 0; col < board[0].length; col++) {
-            var cell = board[row][col];
-
-            const boxNums = findAvailableNumbersInBox(board, row * 3 + col);
-            const rowNums = findAvailableNumbersInRow(board, row);
-            const colNums = findAvailableNumbersInCol(board, col);
-            const available = Array.from(new Set([...boxNums, ...rowNums, ...colNums]));
+    let iter = 0;
+    while (board.some((row) => row.some((col) => col === 0)) && iter < 100) {
+        const availables = findAvailableNumbers(board);
+        for (let row = 0; row < board.length; row++) {
+            for (let col = 0; col < board[0].length; col++) {
+                if (availables[row][col].length === 1) {
+                    board[row][col] = availables[row][col][0];
+                }
+            }
         }
+        iter++;
     }
 
-    return solution;
+    console.log("Iterations:", iter);
+
+    return board;
+}
+
+export function findAvailableNumbers(board: number[][]): number[][][] {
+    const availables: number[][][] = [];
+    for (let row = 0; row < board.length; row++) {
+        availables.push([]);
+        for (let col = 0; col < board[0].length; col++) {
+            var cell = board[row][col];
+            availables[row].push([]);
+            if (cell !== 0) continue;
+            const boxNums = findAvailableNumbersInBox(board, getBox(row, col));
+            const rowNums = findAvailableNumbersInRow(board, row);
+            const colNums = findAvailableNumbersInCol(board, col);
+            const available = boxNums.filter((x) => rowNums.includes(x) && colNums.includes(x));
+            availables[row][col] = available;
+        }
+    }
+    return availables;
 }
 
 export function findAvailableNumbersInRow(board: number[][], row: number): number[] {
@@ -66,11 +85,15 @@ export function findAvailableNumbersInBox(board: number[][], box: number): numbe
     //  box. But this works for now.
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board[0].length; col++) {
-            var cbox = Math.floor(row / 3) * 3 + Math.floor(col / 3);
+            var cbox = getBox(row, col);
             if (cbox != box) continue;
             existing.push(board[row][col]);
         }
     }
 
     return numbers.filter((x) => !existing.includes(x));
+}
+
+export function getBox(row: number, col: number) {
+    return Math.floor(row / 3) * 3 + Math.floor(col / 3);
 }
